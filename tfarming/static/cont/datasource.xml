@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datasource>
+<!--	<datafile label="controller" src="/static/conf/dsxml/controller.xml"/>-->
+	<datafile label="users" src="/static/cont/dsxml/user.xml"/>
+	<datafile label="tmp" src="/static/cont/dsxml/temp.xml"/>
+	<datafile label="devince" src="/static/cont/dsxml/devince.xml"/>
+</datasource>

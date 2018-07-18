@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>农业嘉年华</title>
+    <script src="/static/js/jquery-2.2.3.js"></script>
+    <script src="/static/js/jquery.uploadify.min.js"></script>
+    <script src="/static/js/utils.js"></script>
+    <script src="/static/js/vue.min.js"></script>
+    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+    <link rel="stylesheet" href="/static/css/index.css" type="text/css" />
+    <!--引入CSS-->
+    <link rel="stylesheet" type="text/css" href="/static/css/webuploader.css">
+    <!--引入JS-->
+    <script type="text/javascript" src="/static/js/webuploader.min.js"></script>
+
+</head>
+<body>
+<div class="head" id="head">
+    <div class="head_m">
+        <div class="f_r" id="destoon_member">欢迎，<span class="f_red">客人</span> | <a href="#">请登录</a> | <a href="#">免费注册</a> | <a href="#">忘记密码?</a></div>
+        <div class="head_l">
+          <!--  <ul>
+                <li class="h_fav"><a href="#">中国农村网首页</a></li>
+                <li class="h_fav"><script type="text/javascript">addFav('收藏本页');</script>
+                    <a href="#" title="中国农村网 - 全国农业信息门户网站" rel="sidebar" onclick="if(UA.indexOf('chrome') != -1){alert('请按快捷键Ctrl+D收藏本页，谢谢');return false;}window.external.addFavorite(this.href, this.title);return false;">收藏本页</a></li>
+                <li class="h_fav"><a rel="nofollow" href="#">农业QQ群大全</a></li>
+            </ul>-->
+        </div>
+    </div>
+</div>
+    <div id="app" style="padding-top: 30px;">
+        <p>
+            <router-link to="/home">首页</router-link>
+            <router-link to="/about">上传</router-link>
+        </p>
+        <router-view></router-view>
+    </div>
+
+</body>
+<script src="/static/js/main/main.js"></script>
+</html>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<!-- 
+	optype属性		=0时,表示配置信息; =1时,表示作查询（select）操作；=2时,表示update delete insert 更新操作
+	~DECODE~	解密,用于从数据库取出加密的内容，进行解密，然后返回调用端
+	~ENCODE~	加密,用于往数据库写内容,先加密,然后写入
+	-->
+	<items id="USER_QUERY" name="用户查询">
+		<item id="ALLUSER_SM" optype="1" name="查询所有用户简要信息">
+			<sql>select t1.*,t2.r_name from t_user t1 ,t_role t2 where  t1.roleId=t2.id and isdelete=0 </sql>
+		</item>
+		
+		<item id="ONEUSER_SM" optype="1" name="查询单个用户简要信息">
+			<sql>
+			SELECT
+					t3.*, t4.role_name
+				FROM
+					(
+						SELECT
+							t1.*, t2.role_id
+						FROM
+							ns_user t1
+						LEFT JOIN ns_user_role t2 ON t1.user_id = t2.user_id
+						WHERE
+							t1.is_deleted = 0
+						AND (t1.account_name = '[#1#]' or t1.user_name='[#1#]')
+						AND t1. PASSWORD = '[#2#]'
+					) t3
+				LEFT JOIN ns_role t4 ON t3.role_id = t4.role_id
+			</sql>
+		</item>	
+		<item id="GET_ALLUSER" optype="1" name="查询所有用户信息">
+			<sql>
+				select * from users where is_deleted!=1
+			</sql>
+		</item>			
+		<item id="ADDUSER" optype="2" name="添加用户信息">
+			<sql>
+				insert into t_user (name,pwd,email,telephone,remark,createtime,roleId)
+				values('[#1#]','[#2#]','[#3#]','[#4#]','[#5#]','[#6#]','[#7#]');
+			</sql>
+		</item>
+	<item id="upateuser" optype="2" name="修改用户信息">
+		<sql>
+			update t_user set pwd='[#1#]',email='[#2#]',telephone='[#3#]',remark='[#4#]',roleId='[#5#]',name='[#7#]' where id=[#6#]
+
+		</sql>
+	</item>
+		<item id="deleteuser" optype="2" name="删除用户信息">
+			<sql>
+				update t_user set isdelete=1 where id=[#1#]
+
+			</sql>
+		</item>
+		<item id="getUserById" optype="1" name="根据用户ID查找用户">
+			<sql>
+				select * from t_user where id=[#1#]
+
+			</sql>
+		</item>
+	</items>
+</root>	

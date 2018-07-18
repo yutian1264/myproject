@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<!-- 
+	optype属性		=0时,表示配置信息; =1时,表示作查询（select）操作；=2时,表示update delete insert 更新操作
+	~DECODE~	解密,用于从数据库取出加密的内容，进行解密，然后返回调用端
+	~ENCODE~	加密,用于往数据库写内容,先加密,然后写入
+	-->
+	<items id="setting" name="执行器">
+		<item id="getallzxq" optype="1" name="获取所有执行器">
+			<sql>select * from t_actuator_device order by id desc limit [#1#],[#2#]  </sql>
+		</item>
+		<item id="gettotalcountzxq" optype="1" name="获取执行器总记录数">
+			<sql>select count(*) totalcount from t_actuator_device </sql>
+		</item>
+		<item id="addDevice" optype="2" name="添加执行器设备">
+			<sql>insert into t_actuator_device (actuator_id,channel_id,parent_mark,child_mark,floorId,back1,createTime)
+				values('[#1#]',[#2#],'[#3#]','[#4#]',[#5#],'[#6#]','[#7#]') </sql>
+		</item>
+		<item id="addDeviceSetting" optype="2" name="添加执行器设备">
+			<sql>insert into t_actuator_setting (a_id,content,createtime,floorid)VALUES('[#1#]','[#2#]','[#3#]',[#4#]) </sql>
+		</item>
+		<item id="deleteItemDevice" optype="2" name="删除一个执行器">
+			<sql>delete from  t_actuator_device where actuator_id=[#1#] </sql>
+		</item>
+		<item id="deleteItemDevice1" optype="2" name="删除一个执行器">
+			<sql>delete from  t_actuator_setting where a_id=[#1#] </sql>
+		</item>
+
+		<item id="updateDevice" optype="2" name="修改执行器设备">
+			<sql>update t_actuator_device set parent_mark='[#1#]',child_mark='[#2#]',back1='[#3#]',floorId=[#4#] where id=[#5#]</sql>
+		</item>
+
+		<item id="updateAllSetting" optype="2" name="修改执行器设备时间状态">
+			<sql>update t_actuator_device set onTime='[#1#]',offTime='[#2#]',week='[#3#]',updateTime='[#4#]',updateUserId='[#5#]'</sql>
+		</item>
+		<item id="updateSettingByFloor" optype="2" name="修改执行器设备时间状态">
+			<sql>update t_actuator_device set onTime='[#1#]',offTime='[#2#]',week='[#3#]',updateTime='[#4#]',updateUserId='[#5#]' where floorId=[#6#]</sql>
+		</item>
+
+		<item id="updateDeviceHeader" optype="2" name="心跳信息变更状态">
+			<sql>update t_actuator_setting set
+				content='[#1#]',updatetime='[#3#]' where a_id='[#2#]'</sql>
+		</item>
+
+		<item id="getAllZxqI" optype="1" name="获取所有执行器状态">
+			<sql>select actuator_id,floorId from t_actuator_device group by actuator_id,floorId order by floorid,actuator_id</sql>
+		</item>
+
+
+		<!--温控器-->
+		<item id="getallwkq" optype="1" name="获取所有温控器">
+			<sql>select * from t_temp_data_history order by id desc limit [#1#],[#2#]  </sql>
+		</item>
+		<item id="gettotalcountwkq" optype="1" name="获取执行器总记录数">
+			<sql>select count(*) totalcount from t_temp_data_history </sql>
+		</item>
+		<item id="deleteItemtemp" optype="2" name="根据Id删除温控器">
+			<sql>delete from t_temp_data_history where id=[#1#] </sql>
+		</item>
+		<item id="addwkqDevice" optype="2" name="添加执行器设备">
+			<sql>insert into t_temp_data_history (temp,floor_id,temp_id,addtime,create_user)
+				values('[#1#]',[#2#],'[#3#]','[#4#]',[#5#]) </sql>
+		</item>
+		<item id="updatewkq" optype="2" name="修改温控器">
+			<sql>update t_temp_data_history set temp='[#1#]',floor_id=[#2#],temp_id='[#3#]',update_time='[#4#]',update_user=[#5#] where id=[#6#]
+				 </sql>
+		</item>
+		<item id="getItemWkqById" optype="1" name="根据id查询单个温控器">
+			<sql>update t_temp_data_history set temp='[#1#]',floor_id=[#2#],temp_id='[#3#]',update_time='[#4#]',update_user=[#5#] where id=[#6#]
+			</sql>
+		</item>
+	</items>	
+</root>	
