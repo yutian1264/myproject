@@ -80,7 +80,7 @@ https://github.com/funnyque
           // $html += option.multi ? '<i class="easyUploadIcon noselect head_check" data-checked="no">&#xe693;</i>' : '';
           $html += option.showNote ? '<span class="easy_upload_note">' + option.note + '</span>' : '';
           $html += '</div>';
-          $html += '<ul class="easy_upload_queue"></ul>';
+          $html += '<div style="height:300px; overflow-y: auto"><ul class="easy_upload_queue"></ul></div>';
           $html += '</div>';
           _ele.html($html);
           this.bindHead();

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<!-- 
+	optype属性		=0时,表示配置信息; =1时,表示作查询（select）操作；=2时,表示update delete insert 更新操作
+	~DECODE~	解密,用于从数据库取出加密的内容，进行解密，然后返回调用端
+	~ENCODE~	加密,用于往数据库写内容,先加密,然后写入
+	-->
+	<items id="temp" name="温控器">
+
+		<item id="getTempByFloor" optype="1" name="根据楼层查询温控器">
+			<sql>SELECT * FROM t_temp_data_history where floor_id='[#1#]'</sql>
+		</item>
+		
+		<item id="updatetemp" optype="2" name="设置温控器">
+			<sql>
+				UPDATE t_temp_data_history SET power=[#1#],module=[#2#],tempNum=[#3#],windspeed=[#4#] [#5#]
+			</sql>
+		</item>
+
+		<item id="gettempbyidfloorid" optype="1" name="根据id获取温控器">
+
+				<sql>SELECT * FROM t_temp_data_history where floor_id=[#1#] and temp_id='[#2#]' </sql>
+		</item>
+		<item id="updateitemtemp" optype="2" name="设置单个温控器">
+			<sql>
+				UPDATE t_temp_data_history SET power=[#1#],module=[#2#],tempNum=[#3#],windspeed=[#4#] where floor_id= [#5#] and temp_id='[#6#]'
+			</sql>
+		</item>
+	</items>	
+</root>	

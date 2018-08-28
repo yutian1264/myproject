@@ -3,9 +3,39 @@ package main
 import (
 	_ "photogo/routers"
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/session"
+	"fmt"
+	"sky/com/utils/dbUtils"
 )
+var globalSessions *session.Manager
+func init() {
+	err:=utils.InitMySQLDB("root","root","localhost:3306","ec")
+	if err!=nil{
+		fmt.Println("mysql connected error")
+		return
+	}
+	//utils.MongodbInit("ec","192.168.180.115","27017","ec","panda","ec",4096)
+	sessionConfig := &session.ManagerConfig{
+		CookieName:"gosessionid",
+		EnableSetCookie: true,
+		Gclifetime:3600,
+		Maxlifetime: 3600,
+		Secure: false,
+		CookieLifeTime: 3600,
+		ProviderConfig: "./tmp",
+	}
 
+	globalSessions, _ = session.NewManager("memory",sessionConfig)
+	go globalSessions.GC()
+
+
+}
 func main() {
+	beego.BConfig.WebConfig.StaticDir["/static"] = "static"
+	beego.BConfig.WebConfig.StaticDir["/views"] = "views"
+	beego.BConfig.WebConfig.Session.SessionOn = true
+	//初始化sql 配置文件
+	utils.Init("/static/cont/datasource.xml")
 	beego.Run()
 }
 

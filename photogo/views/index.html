@@ -6,9 +6,20 @@
     <script src="/static/js/jquery-2.2.3.js"></script>
     <script src="/static/js/vue.min.js"></script>
     <script src="/static/js/main.js"></script>
+    <script src="/static/js/utils.js"></script>
 </head>
 <body>
 <div id="app"></div>
-   <header></header>
+    path:<input id="path">
+   <button click="addImg()">添加本地图片</button>
 </body>
+<script>
+    var url=window.location.origin
+    function addImg(){
+        https.get(url+"f/d/addLocalImgs?path="+$("#path").val(),function (r) {
+
+            console.log("====="+r)
+        })
+    }
+</script>
 </html>
