@@ -9,7 +9,7 @@ import (
 )
 var globalSessions *session.Manager
 func init() {
-	err:=utils.InitMySQLDB("root","root","localhost:3306","ec")
+	err:=utils.InitMySQLDB("root","wang","192.168.248.138:3306","tfarming")
 	if err!=nil{
 		fmt.Println("mysql connected error")
 		return

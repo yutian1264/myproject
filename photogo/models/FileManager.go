@@ -90,7 +90,6 @@ func GetExifMess(imgs []string)[]Images {
 				imgList=append(imgList,images )
 				continue
 			}
-
 			images.CreateTime=a.String()
 			imgList=append(imgList,images )
 		}

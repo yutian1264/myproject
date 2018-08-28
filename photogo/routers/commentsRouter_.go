@@ -9,7 +9,7 @@ func init() {
 
 	beego.GlobalControllerRouter["photogo/controllers:MainController"] = append(beego.GlobalControllerRouter["photogo/controllers:MainController"],
 		beego.ControllerComments{
-			Method: "getImgMsg",
+			Method: "AddLocalImgs",
 			Router: `/addLocalImgs`,
 			AllowHTTPMethods: []string{"get"},
 			MethodParams: param.Make(),

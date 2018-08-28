@@ -4,19 +4,23 @@
     <meta charset="UTF-8">
     <title>photos</title>
     <script src="/static/js/jquery-2.2.3.js"></script>
-    <script src="/static/js/vue.min.js"></script>
-    <script src="/static/js/main.js"></script>
     <script src="/static/js/utils.js"></script>
 </head>
 <body>
 <div id="app"></div>
     path:<input id="path">
-   <button click="addImg()">添加本地图片</button>
+   <button onclick="addImg()">添加本地图片</button>
 </body>
 <script>
     var url=window.location.origin
     function addImg(){
-        https.get(url+"f/d/addLocalImgs?path="+$("#path").val(),function (r) {
+        https.get(url+"/f/d/addLocalImgs?path="+$("#path").val(),function (r) {
+
+            console.log("====="+r)
+        })
+    }
+    function getList(){
+        https.get(url+"/f/d/addLocalImgs?path="+$("#path").val(),function (r) {
 
             console.log("====="+r)
         })

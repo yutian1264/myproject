@@ -4,9 +4,14 @@ import (
 	"github.com/astaxie/beego"
 	"path"
 	"fmt"
-	"sky/com/utils/upload"
+	"github.com/yutian1264/sky/com/utils/upload"
 	"github.com/gin-gonic/gin/json"
 	"math/rand"
+	"photogo/models"
+	"sky/com/utils/dbUtils"
+
+	"strconv"
+	"strings"
 )
 
 type MainController struct {
@@ -19,10 +24,32 @@ func (c *MainController) Get() {
 	c.TplName = "index.html"
 }
 // @router /addLocalImgs [get]
-func (c *MainController) getImgMsg(){
+func (c *MainController)AddLocalImgs(){
 	path:=c.GetString("path")
-	fmt.Println(path)
+	//fmt.Println(path)
+	suffix := []string{".PNG", ".JPG"}
+	files,_:=models.OpenFilesAndGetMsg(path,suffix)
+	if len(files)>0{
+		old:="\\"
+		newStr:="//"
+		for _,d:=range files{
+			lat:=strconv.FormatFloat(d.Lat, 'E', -1, 64)//float64
+			lng:=strconv.FormatFloat(d.Lng, 'E', -1, 64)//float64
+			name:=strings.Replace(d.Name,old,newStr,-1)
+			path:=strings.Replace(d.Name,old,newStr,-1)
+			sql:="insert into resource (name,path,type,resource_time,createTime,remark,lat,lng,position) values" +
+				"('"+name+"','"+path+"','','"+d.CreateTime+"','"+models.GetCurrentTime()+"','',"+lat+","+lng+",'"+d.City+"')"
+				utils.Add(sql)
+			}
+	}
 	c.Ctx.WriteString(path)
+}
+// @router /getAllList [get]
+func (this *MainController) GetAllList(){
+	res_type:=this.GetString("type")
+	m:=utils.Query("select* from resource where type="+res_type)
+	b,_:=json.Marshal(m)
+	this.Ctx.WriteString(string(b))
 }
 // @router /addphoto [post]
 func (this *MainController) Upload() {
