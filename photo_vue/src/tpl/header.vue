@@ -6,14 +6,14 @@
       <li><a>关于我们</a></li>
     </ul>
     <span style="float: right;">欢迎{{user}}</span>
-    <button @click.stop="additem">additem</button>
-    <input v-model="myvalue" @keydown.enter="testkeydown">
-   <com-a :number="myvalue" @my-event="myEvent">
-     <p slot="header">header</p>
-     <p>test</p>
-     <p slot="footer">footer</p>
-   </com-a>
-    {{tar}}
+    <!--<button @click.stop="additem">additem</button>-->
+    <!--<input v-model="myvalue" @keydown.enter="testkeydown">-->
+   <!--<com-a :number="myvalue" @my-event="myEvent">-->
+     <!--<p slot="header">header</p>-->
+     <!--<p>test</p>-->
+     <!--<p slot="footer">footer</p>-->
+   <!--</com-a>-->
+    <!--{{tar}}-->
   </div>
 </template>
 
@@ -68,13 +68,16 @@
 </script>
 
 <style scoped>
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
 a{
   cursor: pointer;
 }
   li{
-   // border: aliceblue 1px solid;
-   // width: 150px;
-   // height: 30px;
+    display: inline-block;
+    margin: 0 10px;
   }
   #c{
     display:inline-flex;

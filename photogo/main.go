@@ -6,10 +6,11 @@ import (
 	"github.com/astaxie/beego/session"
 	"fmt"
 	"sky/com/utils/dbUtils"
+	"photogo/models"
 )
 var globalSessions *session.Manager
 func init() {
-	err:=utils.InitMySQLDB("root","wang","192.168.248.138:3306","tfarming")
+	err:=utils.InitMySQLDB("root","root","localhost:3306","farming")
 	if err!=nil{
 		fmt.Println("mysql connected error")
 		return
@@ -34,6 +35,13 @@ func main() {
 	beego.BConfig.WebConfig.StaticDir["/static"] = "static"
 	beego.BConfig.WebConfig.StaticDir["/views"] = "views"
 	beego.BConfig.WebConfig.Session.SessionOn = true
+	beego.InsertFilter("*", beego.BeforeRouter, models.Allow(&models.Options{
+		AllowAllOrigins:  true,
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Authorization", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "Content-Type"},
+		ExposeHeaders:    []string{"Content-Length", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "Content-Type"},
+		AllowCredentials: true,
+	}))
 	//初始化sql 配置文件
 	utils.Init("/static/cont/datasource.xml")
 	beego.Run()
