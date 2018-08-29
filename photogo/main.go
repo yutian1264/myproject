@@ -10,7 +10,7 @@ import (
 )
 var globalSessions *session.Manager
 func init() {
-	err:=utils.InitMySQLDB("root","root","localhost:3306","farming")
+	err:=utils.InitMySQLDB("root","wang","192.168.248.138:3306","tfarming")
 	if err!=nil{
 		fmt.Println("mysql connected error")
 		return
@@ -34,6 +34,8 @@ func init() {
 func main() {
 	beego.BConfig.WebConfig.StaticDir["/static"] = "static"
 	beego.BConfig.WebConfig.StaticDir["/views"] = "views"
+	beego.SetStaticPath( "/j","J:\\")
+	beego.SetStaticPath( "/h","H:\\")
 	beego.BConfig.WebConfig.Session.SessionOn = true
 	beego.InsertFilter("*", beego.BeforeRouter, models.Allow(&models.Options{
 		AllowAllOrigins:  true,

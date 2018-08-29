@@ -26,6 +26,10 @@
             var that=this
             test(function(r){
               if(r.length>0){
+                $.each(r,function(i,e){
+                  e.path=e.path.replace("J://","http://192.168.2.100:8500/j/")
+                  e.path=e.path.replace("H://","http://192.168.2.100:8500/h/")
+                })
                 that.imgList=r
               }
             })
@@ -35,7 +39,7 @@
     }
 
   function test(d) {
-    https.get("http://192.168.110.143:8500/f/d/getAllList?type=",function(r){
+    https.get("http://192.168.2.100:8500/f/d/getAllList?type=",function(r){
       d(r)
     })
   }
@@ -44,7 +48,7 @@
 
 <style scoped>
   ul{
-    display: flex;
+
   }
   li{
     display:block;

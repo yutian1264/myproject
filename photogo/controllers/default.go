@@ -11,6 +11,7 @@ import (
 	"sky/com/utils/dbUtils"
 
 	"strconv"
+	//"strings"
 	"strings"
 )
 
@@ -31,11 +32,13 @@ func (c *MainController)AddLocalImgs(){
 	files,_:=models.OpenFilesAndGetMsg(path,suffix)
 	if len(files)>0{
 		old:="\\"
-		newStr:="//"
+		newStr:="/"
 		for _,d:=range files{
 			lat:=strconv.FormatFloat(d.Lat, 'E', -1, 64)//float64
 			lng:=strconv.FormatFloat(d.Lng, 'E', -1, 64)//float64
+			//name:=strings.Replace(d.Name,"//","//",-1)
 			name:=strings.Replace(d.Name,old,newStr,-1)
+			//name=strings.Replace(d.Name,"\\\\",newStr,-1)
 			path:=name//strings.Replace(d.Name,old,newStr,-1)
 			sql:="insert into resource (name,path,type,resource_time,createTime,remark,lat,lng,position) values" +
 				"('"+name+"','"+path+"','','"+d.CreateTime+"','"+models.GetCurrentTime()+"','',"+lat+","+lng+",'"+d.City+"')"
@@ -47,7 +50,7 @@ func (c *MainController)AddLocalImgs(){
 // @router /getAllList [get]
 func (this *MainController) GetAllList(){
 	res_type:=this.GetString("type")
-	m,_:=utils.Query("select* from resource where type='"+res_type+"'")
+	m:=utils.Query("select* from resource where type='"+res_type+"'")
 	b,_:=json.Marshal(m)
 	this.Ctx.WriteString(string(b))
 }
