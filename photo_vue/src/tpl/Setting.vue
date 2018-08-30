@@ -1,6 +1,7 @@
 <template>
   <div>
-    <button @click="getlist">get list</button>
+    <button @click="getlist('up')">上一页</button>
+    <button @click="getlist('down')">下一页</button>
     <div style="height: 600px; overflow-y: auto">
       <ul>
         <li v-for="ele in imgList">
@@ -12,7 +13,8 @@
 </template>
 
 <script>
-  var url = "http://192.168.110.143:8500"
+  // var url = "http://192.168.110.143:8500"
+  var url = "http://192.168.2.100:8500"
   import item from "./../tpl/ItemImageComp.vue"
 
   export default {
@@ -44,9 +46,10 @@
       })
     },
     methods: {
-      getlist() {
+      getlist(type) {
         var that = this
-        test1(function (res) {
+        this.imgList=[];
+        test1(type,function (res) {
           var r=res.data
           if (r.length > 0) {
             $.each(r, function (i, e) {
@@ -72,8 +75,17 @@
       d(r)
     })
   }
-  function test1(d) {
-    pageSize++
+  function test1(type,d) {
+    if(type=="up"){
+      if(pageSize>0){
+        pageSize--
+      }else{
+        pageSize=0
+      }
+    }else{
+      pageSize++
+    }
+
     https.get(url + "/f/d/getListByPage?type=&pageSize="+pageSize+"&pageCount="+pageCount, function (r) {
       d(r)
     })

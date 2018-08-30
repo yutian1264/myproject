@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin/json"
 	"math/rand"
 	"photogo/models"
-	"sky/com/utils/dbUtils"
+	"github.com/yutian1264/sky/com/utils/dbUtils"
 
 	"strconv"
 	//"strings"
@@ -48,8 +48,10 @@ func (c *MainController)AddLocalImgs(){
 // @router /getListByPage [get]
 func (this *MainController)GetListByPage(){
 	res_type:=this.GetString("type")
+	pageSize,_:=strconv.Atoi(this.GetString("pageSize"))
+	pageCount,_:=strconv.Atoi(this.GetString("pageCount"))
 	condition:="type='"+res_type+"'"
-	m:=utils.QueryByPage("resource",condition,0,20)
+	m:=utils.QueryByPage("resource",condition,pageSize,pageCount)
 	b,_:=json.Marshal(m)
 	this.Ctx.WriteString(string(b))
 

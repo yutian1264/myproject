@@ -5,13 +5,13 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/session"
 	"fmt"
-	"sky/com/utils/dbUtils"
+	"github.com/yutian1264/sky/com/utils/dbUtils"
 	"photogo/models"
 )
 var globalSessions *session.Manager
 func init() {
-	err:=utils.InitMySQLDB("root","root","localhost:3306","farming")
-	//err:=utils.InitMySQLDB("root","wang","192.168.248.138:3306","tfarming")
+	//err:=utils.InitMySQLDB("root","root","localhost:3306","farming")
+	err:=utils.InitMySQLDB("root","wang","192.168.248.138:3306","tfarming")
 	if err!=nil{
 		fmt.Println("mysql connected error")
 		return
