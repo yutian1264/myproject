@@ -1,45 +1,80 @@
 <template>
-    <div>
-      <button @click="getlist">get list</button>
-      <ul style="display: grid">
-        <li v-for="ele in imgList"> <item :imgPath="ele.path" :valname="ele.name"></item></li>
-
+  <div>
+    <button @click="getlist">get list</button>
+    <div style="height: 600px; overflow-y: auto">
+      <ul>
+        <li v-for="ele in imgList">
+          <item :imgPath="ele.path" :valname="ele.name"></item>
+        </li>
       </ul>
-
     </div>
+  </div>
 </template>
 
 <script>
+  var url = "http://192.168.110.143:8500"
   import item from "./../tpl/ItemImageComp.vue"
-    export default {
-        name: "setting",
-        components:{
-          item
-        },
-        data(){
-          return{
-            imgList:[],
-          }
-        },
-        methods:{
-          getlist(){
-            var that=this
-            test(function(r){
-              if(r.length>0){
-                $.each(r,function(i,e){
-                  e.path=e.path.replace("J://","http://192.168.2.100:8500/j/")
-                  e.path=e.path.replace("H://","http://192.168.2.100:8500/h/")
-                })
-                that.imgList=r
-              }
-            })
-          }
-        }
 
+  export default {
+    name: "setting",
+    components: {
+      item
+    },
+    data() {
+      return {
+        imgList: [],
+      }
+    },
+    mounted(){
+      console.log("页面加载完成")
+      var that = this
+      test(function (res) {
+        var r=res.data
+        if (r.length > 0) {
+          $.each(r, function (i, e) {
+            e.path = e.path.replace("J://", url + "/j/")
+            e.path = e.path.replace("H://", url + "/h/")
+            e.path = e.path.replace("D://", url + "/d/")
+            e.path = e.path.replace("C://", url + "/c/")
+            e.path = e.path.replace("E://", url + "/e/")
+            e.path = e.path.replace("G://", url + "/g/")
+          })
+          that.imgList = r
+        }
+      })
+    },
+    methods: {
+      getlist() {
+        var that = this
+        test1(function (res) {
+          var r=res.data
+          if (r.length > 0) {
+            $.each(r, function (i, e) {
+              e.path = e.path.replace("J://", url + "/j/")
+              e.path = e.path.replace("H://", url + "/h/")
+              e.path = e.path.replace("D://", url + "/d/")
+              e.path = e.path.replace("C://", url + "/c/")
+              e.path = e.path.replace("E://", url + "/e/")
+              e.path = e.path.replace("G://", url + "/g/")
+            })
+            that.imgList = r
+          }
+        })
+      }
     }
 
+  }
+
+  var pageSize=0;
+  var pageCount=20;
   function test(d) {
-    https.get("http://192.168.2.100:8500/f/d/getAllList?type=",function(r){
+    https.get(url + "/f/d/getListByPage?type=&pageSize="+pageSize+"&pageCount="+pageCount, function (r) {
+      d(r)
+    })
+  }
+  function test1(d) {
+    pageSize++
+    https.get(url + "/f/d/getListByPage?type=&pageSize="+pageSize+"&pageCount="+pageCount, function (r) {
       d(r)
     })
   }
@@ -47,12 +82,16 @@
 </script>
 
 <style scoped>
-  ul{
-
+  ul {
+    position: relative;
   }
-  li{
-    display:block;
-    font-size:14px;
+
+  li {
+    display: block;
+    font-size: 14px;
+    float: left;
+    margin-right: 5px;
+    margin-bottom: 5px;
 
   }
 </style>

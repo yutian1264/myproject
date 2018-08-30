@@ -33,6 +33,14 @@ func init() {
 
 	beego.GlobalControllerRouter["photogo/controllers:MainController"] = append(beego.GlobalControllerRouter["photogo/controllers:MainController"],
 		beego.ControllerComments{
+			Method: "GetListByPage",
+			Router: `/getListByPage`,
+			AllowHTTPMethods: []string{"get"},
+			MethodParams: param.Make(),
+			Params: nil})
+
+	beego.GlobalControllerRouter["photogo/controllers:MainController"] = append(beego.GlobalControllerRouter["photogo/controllers:MainController"],
+		beego.ControllerComments{
 			Method: "Tpost",
 			Router: `/testpost`,
 			AllowHTTPMethods: []string{"post"},
