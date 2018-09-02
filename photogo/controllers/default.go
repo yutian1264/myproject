@@ -5,14 +5,15 @@ import (
 	"path"
 	"fmt"
 	"github.com/yutian1264/sky/com/utils/upload"
-	"github.com/gin-gonic/gin/json"
+	"encoding/json"
 	"math/rand"
 	"photogo/models"
-	"github.com/yutian1264/sky/com/utils/dbUtils"
-
+	dbUtils "github.com/yutian1264/sky/com/utils/dbUtils"
+	. "github.com/yutian1264/sky/com/utils"
 	"strconv"
 	//"strings"
 	"strings"
+	"log"
 )
 
 type MainController struct {
@@ -26,32 +27,96 @@ func (c *MainController) Get() {
 }
 // @router /addLocalImgs [get]
 func (c *MainController)AddLocalImgs(){
+	go getImgs(c)
+}
+//var group sync.WaitGroup
+var pool models.Pool
+func getImgs(c *MainController){
+
 	path:=c.GetString("path")
 	//fmt.Println(path)
 	suffix := []string{".PNG", ".JPG"}
 	files,_:=models.OpenFilesAndGetMsg(path,suffix)
 	if len(files)>0{
+		pool.Init(7, len(files));
 		old:="\\"
 		newStr:="/"
 		for _,d:=range files{
+			//group.Add(1)
 			lat:=strconv.FormatFloat(d.Lat, 'E', -1, 64)//float64
 			lng:=strconv.FormatFloat(d.Lng, 'E', -1, 64)//float64
-			name:=strings.Replace(d.Name,old,newStr,-1)
-			path:=name
-			sql:="insert into resource (name,path,type,resource_time,createTime,remark,lat,lng,position) values" +
-				"('"+name+"','"+path+"','','"+d.CreateTime+"','"+models.GetCurrentTime()+"','',"+lat+","+lng+",'"+d.City+"')"
-				utils.Add(sql)
+			path:=strings.Replace(d.Name,old,newStr,-1)
+			name:=path
+			name=name[strings.LastIndex(name,"/")+1:]
+			temp:=strings.Split(path,"/")
+			thumb:="thumb_"+name
+			thumbSaveParh:="H:/thumb/"+temp[len(temp)-2]
+			b,err:=PathNotExistsCreate(thumbSaveParh)
+			if !b{
+				recover()
+				log.Println("mkdir failed![%v]\n", err)
 			}
+			sql:="insert into resource (name,path,type,resource_time,createTime,remark,lat,lng,position,thumb) values" +
+				"('"+name+"','"+path+"','','"+d.CreateTime+"','"+models.GetCurrentTime()+"','',"+lat+","+lng+",'"+d.City+"','"+thumbSaveParh+"/"+thumb+"')"
+			pool.AddTask(func()error {
+				return createThumb(path,thumbSaveParh,thumb,sql);
+			});
+
+		}
+		pool.SetFinishCallback(func() {
+			fmt.Println("更新完成")
+			c.Ctx.WriteString("OK")
+		});
+		pool.Start();
+		//group.Wait()
+		pool.Stop();
+	}else{
+		c.Ctx.WriteString("")
 	}
-	c.Ctx.WriteString(path)
+
+}
+
+func createThumb(path,thumbSaveParh,thumbName,sql string)error{
+	dbUtils.Add(sql)
+	err:=CreateThumb(path,thumbSaveParh,thumbName,500,500)
+	if err!=nil{
+		fmt.Println(err)
+	}
+	//group.Done()
+	return err
+}
+// @router /UpdateRess [post]
+func (this *MainController)UpdateRess(){
+	this.Ctx.Request.ParseForm()
+	param:=this.Ctx.Request.Form.Get("param")
+	m:=make(map[string]interface{})
+	json.Unmarshal([]byte(param),&m)
+	owner:=m["owner"].(string)
+	res_type:=m["type"].(string)
+	ids:=m["ids"].([]interface{})
+	fmt.Println(owner,res_type,ids)
+	for _,s:=range ids{
+		fmt.Println(s)
+		sql:="update resource set sub_user='"+owner +"',type='"+res_type+"' where id="+s.(string)
+		dbUtils.Sql_update(sql,false)
+	}
+	fmt.Println(m)
+	this.Ctx.WriteString("")
+
 }
 // @router /getListByPage [get]
 func (this *MainController)GetListByPage(){
 	res_type:=this.GetString("type")
 	pageSize,_:=strconv.Atoi(this.GetString("pageSize"))
 	pageCount,_:=strconv.Atoi(this.GetString("pageCount"))
-	condition:="type='"+res_type+"'"
-	m:=utils.QueryByPage("resource",condition,pageSize,pageCount)
+	var condition="";
+	if len(res_type)==0{
+		condition="sub_user is null"
+	}else{
+		condition="sub_user='"+res_type+"'"
+	}
+
+	m:=dbUtils.QueryByPage("resource",condition,pageSize,pageCount)
 	b,_:=json.Marshal(m)
 	this.Ctx.WriteString(string(b))
 
@@ -59,7 +124,19 @@ func (this *MainController)GetListByPage(){
 // @router /getAllList [get]
 func (this *MainController) GetAllList(){
 	res_type:=this.GetString("type")
-	m,_:=utils.Query("select* from resource where type='"+res_type+"'")
+	m,_:=dbUtils.Query("select* from resource where type='"+res_type+"'")
+	b,_:=json.Marshal(m)
+	this.Ctx.WriteString(string(b))
+}
+// @router /getResTypeList [get]
+func(this *MainController)GetResTypeList(){
+	m,_:=dbUtils.Query("select * from res_type")
+	b,_:=json.Marshal(m)
+	this.Ctx.WriteString(string(b))
+}
+// @router /getResOwnerList [get]
+func(this *MainController)GetResOwnerList(){
+	m,_:=dbUtils.Query("select * from res_owner where level is null")
 	b,_:=json.Marshal(m)
 	this.Ctx.WriteString(string(b))
 }

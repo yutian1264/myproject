@@ -9,6 +9,14 @@ func init() {
 
 	beego.GlobalControllerRouter["photogo/controllers:MainController"] = append(beego.GlobalControllerRouter["photogo/controllers:MainController"],
 		beego.ControllerComments{
+			Method: "UpdateRess",
+			Router: `/UpdateRess`,
+			AllowHTTPMethods: []string{"post"},
+			MethodParams: param.Make(),
+			Params: nil})
+
+	beego.GlobalControllerRouter["photogo/controllers:MainController"] = append(beego.GlobalControllerRouter["photogo/controllers:MainController"],
+		beego.ControllerComments{
 			Method: "AddLocalImgs",
 			Router: `/addLocalImgs`,
 			AllowHTTPMethods: []string{"get"},
@@ -35,6 +43,22 @@ func init() {
 		beego.ControllerComments{
 			Method: "GetListByPage",
 			Router: `/getListByPage`,
+			AllowHTTPMethods: []string{"get"},
+			MethodParams: param.Make(),
+			Params: nil})
+
+	beego.GlobalControllerRouter["photogo/controllers:MainController"] = append(beego.GlobalControllerRouter["photogo/controllers:MainController"],
+		beego.ControllerComments{
+			Method: "GetResOwnerList",
+			Router: `/getResOwnerList`,
+			AllowHTTPMethods: []string{"get"},
+			MethodParams: param.Make(),
+			Params: nil})
+
+	beego.GlobalControllerRouter["photogo/controllers:MainController"] = append(beego.GlobalControllerRouter["photogo/controllers:MainController"],
+		beego.ControllerComments{
+			Method: "GetResTypeList",
+			Router: `/getResTypeList`,
 			AllowHTTPMethods: []string{"get"},
 			MethodParams: param.Make(),
 			Params: nil})

@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/yutian1264/sky/com/utils/dbUtils"
 	"photogo/models"
+	"runtime"
 )
 var globalSessions *session.Manager
 func init() {
@@ -33,14 +34,15 @@ func init() {
 
 }
 func main() {
+	runtime.GOMAXPROCS(runtime.NumCPU())
 	beego.BConfig.WebConfig.StaticDir["/static"] = "static"
 	beego.BConfig.WebConfig.StaticDir["/views"] = "views"
-	beego.SetStaticPath( "/j","J:\\")
-	beego.SetStaticPath( "/h","H:\\")
-	beego.SetStaticPath( "/d","D:\\")
-	beego.SetStaticPath( "/c","C:\\")
-	beego.SetStaticPath( "/e","E:\\")
-	beego.SetStaticPath( "/g","G:\\")
+	beego.SetStaticPath( "/j","J:/")
+	beego.SetStaticPath( "/h","H:/")
+	beego.SetStaticPath( "/d","D:/")
+	beego.SetStaticPath( "/c","C:/")
+	beego.SetStaticPath( "/e","E:/")
+	beego.SetStaticPath( "/g","G:/")
 	beego.BConfig.WebConfig.Session.SessionOn = true
 	beego.InsertFilter("*", beego.BeforeRouter, models.Allow(&models.Options{
 		AllowAllOrigins:  true,
@@ -53,4 +55,5 @@ func main() {
 	utils.Init("/static/cont/datasource.xml")
 	beego.Run()
 }
+
 

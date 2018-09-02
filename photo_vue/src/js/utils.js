@@ -213,6 +213,7 @@ var time={
 
 var StringsUtils={
     isNull:function(s) {
+      s=$.trim(s)
         if(s==undefined || s=="undefined" || s=="" || s==null || s=="null") {
             return true;
         }
@@ -772,7 +773,7 @@ function countDate(abortDate){
 		month = Math.ceil(ms/30/24/60/60%30);
 		year = Math.ceil(ms/12/30/24/60/60%12);
 	}
-	
+
 	console.log(year+"年"+month+"月"+day+"日"+hour+"时"+min+"分"+s+"秒");
 	var html =  '<span class="count_year" times="'+ year +'">'+ Math.abs(year) +'年</span>'+
 				'<span class="count_month" times="'+ month +'">'+ Math.abs(month) +'月</span>'+
