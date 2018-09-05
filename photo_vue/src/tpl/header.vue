@@ -1,7 +1,9 @@
 <template>
   <div id="c">
     <ul>
-      <li><a>首页</a></li>
+      <li><a @click="headerClick('first')">首页</a></li>
+      <li><a  @click="headerClick('setting')">setting</a></li>
+      <li><a  @click="headerClick('map')">map</a></li>
       <li><a>帮助</a></li>
       <li><a>关于我们</a></li>
     </ul>
@@ -27,24 +29,13 @@
       },
       data(){
         return{
-          user:"wyt",
-          tar:'',
-          myvalue:""
+
+          user:"wyt"
         }
       },
       methods:{
-        additem() {
-          this.user="王艳涛"
-          test()
-        },
-        testkeydown(){
-          console.log($(event.target).val())
-          this.myvalue=$(event.target).val();
-
-        },
-        myEvent(p){
-          console.log("my event"+p.number)
-          this.tar=p.number
+        headerClick(s){
+          this.$emit("changetab",s)
         }
       }
     }

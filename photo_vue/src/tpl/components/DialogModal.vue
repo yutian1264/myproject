@@ -3,7 +3,7 @@
       <div class="modal">
         <header class="modal-header">
           <slot name="header">
-            <botton class="btn-close">X</botton>
+            <button class="btn-close">X</button>
           </slot>
         </header>
         <section class="modal-body">
@@ -22,7 +22,6 @@
 
 <script>
     export default {
-        name: "dialog_modal",
       methods:{
           close(){
             this.$emit('close')
@@ -47,10 +46,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 500px;
-  height: 500px;
+  width: 100%;
+  height:100%;
 }
   .modal{
+    height: 500px;
+    widht: 500px;
     background:#ffffff;
     box-shadow: 2px 2px 20px 1px;
     overflow-x: auto;

@@ -19,11 +19,12 @@
     <div style="height: 600px; overflow-y: auto">
       <ul id="list">
         <li v-for="ele in imgList">
-          <item :imgPath="ele.thumb" @changedItem="changedItem" :valname="ele.path" :id="ele.id"></item>
+          <item :choose="choose" :imgPath="ele.thumb" @changedItem="changedItem" :valname="ele.path" :id="ele.id"></item>
         </li>
       </ul>
     </div>
-    <dialog_modal v-show="ismodalvisible" @close="closeModal"></dialog_modal>
+    <!--<DialogModal class="dialg" v-show="ismodalvisible" @close="closeModal" @save="save"></DialogModal>-->
+    <dialog3 :is-show="ismodalvisible" @on-close="closeModal" @save="save"></dialog3>
   </div>
 </template>
 
@@ -32,12 +33,14 @@
   var url = "http://192.168.2.100:8500"
   import item from "./../tpl/ItemImageComp.vue"
   import DialogModal  from "./../tpl/components/DialogModal.vue"
+  import dialog3  from "./../tpl/components/dialog3.vue"
 
   export default {
     name: "setting",
     components: {
       item,
-      DialogModal
+      DialogModal,
+      dialog3
     },
     data() {
       return {
@@ -50,7 +53,8 @@
         restype1:"",
         res_type:"",
         restype2:"",
-        ismodalvisible:false
+        ismodalvisible:false,
+        choose:false
       }
     },
     mounted(){
@@ -58,23 +62,7 @@
       var that = this
       test(this.restype1,function (res) {
         var r=res.data
-        if (r.length > 0) {
-          $.each(r, function (i, e) {
-            e.path = e.path.replace("J:/", url + "/j/")
-            e.path = e.path.replace("H:/", url + "/h/")
-            e.path = e.path.replace("D:/", url + "/d/")
-            e.path = e.path.replace("C:/", url + "/c/")
-            e.path = e.path.replace("E:/", url + "/e/")
-            e.path = e.path.replace("G:/", url + "/g/")
-            e.thumb = e.thumb.replace("J:/", url + "/j/")
-            e.thumb = e.thumb.replace("H:/", url + "/h/")
-            e.thumb = e.thumb.replace("D:/", url + "/d/")
-            e.thumb = e.thumb.replace("C:/", url + "/c/")
-            e.thumb = e.thumb.replace("E:/", url + "/e/")
-            e.thumb = e.thumb.replace("G:/", url + "/g/")
-          })
-          that.imgList = r
-        }
+        that.imgList= collateData(r)
       })
       getResList(function(r){
           that.typeList1=r
@@ -85,32 +73,19 @@
     },
     methods: {
       closeModal(){
-        this.ismodalvisible=true
+        this.ismodalvisible=false
       },
       opendialog(){
-        this.ismodalvisible=false
+        this.ismodalvisible=true
+      },
+      save(){
+        alert("save")
       },
       changeType(){
         var that = this
         test(this.restype1,function (res) {
-          var r = res.data
-          if (r.length > 0) {
-            $.each(r, function (i, e) {
-              e.path = e.path.replace("J:/", url + "/j/")
-              e.path = e.path.replace("H:/", url + "/h/")
-              e.path = e.path.replace("D:/", url + "/d/")
-              e.path = e.path.replace("C:/", url + "/c/")
-              e.path = e.path.replace("E:/", url + "/e/")
-              e.path = e.path.replace("G:/", url + "/g/")
-              e.thumb = e.thumb.replace("J:/", url + "/j/")
-              e.thumb = e.thumb.replace("H:/", url + "/h/")
-              e.thumb = e.thumb.replace("D:/", url + "/d/")
-              e.thumb = e.thumb.replace("C:/", url + "/c/")
-              e.thumb = e.thumb.replace("E:/", url + "/e/")
-              e.thumb = e.thumb.replace("G:/", url + "/g/")
-            })
-            that.imgList = r
-          }
+          var r=res.data
+          that.imgList= collateData(r)
         })
       },
       changedItem(id,flg){
@@ -143,23 +118,7 @@
           that.changedList=[]
           test(that.restype1,function (res) {
             var r=res.data
-            if (r.length > 0) {
-              $.each(r, function (i, e) {
-                e.path = e.path.replace("J:/", url + "/j/")
-                e.path = e.path.replace("H:/", url + "/h/")
-                e.path = e.path.replace("D:/", url + "/d/")
-                e.path = e.path.replace("C:/", url + "/c/")
-                e.path = e.path.replace("E:/", url + "/e/")
-                e.path = e.path.replace("G:/", url + "/g/")
-                e.thumb = e.thumb.replace("J:/", url + "/j/")
-                e.thumb = e.thumb.replace("H:/", url + "/h/")
-                e.thumb = e.thumb.replace("D:/", url + "/d/")
-                e.thumb = e.thumb.replace("C:/", url + "/c/")
-                e.thumb = e.thumb.replace("E:/", url + "/e/")
-                e.thumb = e.thumb.replace("G:/", url + "/g/")
-              })
-              that.imgList = r
-            }
+            that.imgList= collateData(r)
           })
         })
 
@@ -169,29 +128,32 @@
         this.imgList=[];
         test1(type,this.restype1,function (res) {
           var r=res.data
-          if (r.length > 0) {
-            $.each(r, function (i, e) {
-              e.path = e.path.replace("J:/", url + "/j/")
-              e.path = e.path.replace("H:/", url + "/h/")
-              e.path = e.path.replace("D:/", url + "/d/")
-              e.path = e.path.replace("C:/", url + "/c/")
-              e.path = e.path.replace("E:/", url + "/e/")
-              e.path = e.path.replace("G:/", url + "/g/")
-              e.thumb = e.thumb.replace("J:/", url + "/j/")
-              e.thumb = e.thumb.replace("H:/", url + "/h/")
-              e.thumb = e.thumb.replace("D:/", url + "/d/")
-              e.thumb = e.thumb.replace("C:/", url + "/c/")
-              e.thumb = e.thumb.replace("E:/", url + "/e/")
-              e.thumb = e.thumb.replace("G:/", url + "/g/")
-            })
-            that.imgList = r
-          }
+          that.imgList= collateData(r)
         })
       }
     }
 
   }
-
+  //整理数据
+  function collateData(r){
+    if (r.length > 0) {
+      $.each(r, function (i, e) {
+        e.path = e.path.replace("J:/", url + "/j/")
+        e.path = e.path.replace("H:/", url + "/h/")
+        e.path = e.path.replace("D:/", url + "/d/")
+        e.path = e.path.replace("C:/", url + "/c/")
+        e.path = e.path.replace("E:/", url + "/e/")
+        e.path = e.path.replace("G:/", url + "/g/")
+        e.thumb = e.thumb.replace("J:/", url + "/j/")
+        e.thumb = e.thumb.replace("H:/", url + "/h/")
+        e.thumb = e.thumb.replace("D:/", url + "/d/")
+        e.thumb = e.thumb.replace("C:/", url + "/c/")
+        e.thumb = e.thumb.replace("E:/", url + "/e/")
+        e.thumb = e.thumb.replace("G:/", url + "/g/")
+      })
+      return r
+    }
+  }
   var pageSize=0;
   var pageCount=100;
   function test(retype,d) {
