@@ -11,7 +11,7 @@
             container
           </slot>
         </section>
-       <footer calss="modal-footer">
+       <footer class="modal-footer">
          <button class="btn-green" @click="close">cancel</button>
          <button @click="save">submit</button>
        </footer>

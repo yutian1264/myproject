@@ -26,6 +26,7 @@ func init() {
 		beego.NSNamespace("/d",
 			beego.NSInclude(
 				&controllers.MainController{},
+				&controllers.DirectoryManager{},
 			),
 		),
 		//beego.NSNamespace("apk",beego.NSInclude(nil)),

@@ -3,15 +3,26 @@
   <head>
     <meta charset="utf-8">
     <title>photo_vue</title>
+    <link rel="stylesheet" href="src/css/bootstrap.css" type="text/css" />
+    <link rel="stylesheet" href="src/css/easy-upload.css">
     <script type="application/javascript" src="src/js/jquery-2.2.3.js"></script>
+    <script src="src/js/jquery.cookie-1.4.1.min.js"></script>
+
     <script type="application/javascript" src="src/js/utils.js"></script>
+    <script type="application/javascript" src="src/js/CommUtil.js"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=RtTBEI0rfunajbaIwzWC91IwwL3NTMLQ"></script>
+
+    <!--<link rel="stylesheet" href="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.css" />-->
+
   </head>
   <body class="docs">
         <div id="app">
-          <header_view></header_view>
-          <setting></setting>
+          <header_view @changetab="header_change"></header_view>
+          <container :tab="tab"></container>
         </div>
-
+        <script src="src/js/easyUpload.js"></script>
     <script src="/dist/build.js"></script>
+
+
   </body>
 </html>

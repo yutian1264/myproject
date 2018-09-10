@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/yutian1264/sky/com/utils/upload"
 	"encoding/json"
-	"math/rand"
 	"photogo/models"
 	dbUtils "github.com/yutian1264/sky/com/utils/dbUtils"
 	. "github.com/yutian1264/sky/com/utils"
@@ -144,12 +143,15 @@ func(this *MainController)GetResOwnerList(){
 func (this *MainController) Upload() {
 	this.TplName="upload.html"
 	//go uploadThread(this)
-	var ch=make(chan int)
-	go upload.UploadBreakPoint(this.Ctx.Request,"file","static/upload/",ch)
+	var ch=make(chan upload.ResultChan)
+	this.Ctx.Request.ParseForm()
+	savePath:=this.Ctx.Request.Form.Get("savePath")
+	go upload.UploadBreakPoint(this.Ctx.Request,"file",savePath,ch)
 	c:=<-ch
 	var result=make(map[string]interface{})
 	result["code"]=200
-	result["status"]=c
+	result["status"]=c.Status
+	result["data"]=c
 	b,_:=json.Marshal(result)
 	this.Ctx.WriteString(string(b))
 }
@@ -164,110 +166,29 @@ func uploadThread(this *MainController){
 	this.Ctx.WriteString("OK")
 	this.TplName="upload.html"
 }
-// @router /testpost [post]
-func (this *MainController)Tpost(){
-	this.TplName="upload.html"
+// @router /addResource [post]
+func (this *MainController)AddResource(){
 	this.Ctx.Request.ParseForm()
-	forms:=this.Ctx.Request.Form
-	fmt.Println(forms)
-	i:=rand.Intn(4)
-	var result="";
-	switch i {
-		case 0:
-			result=`{
-			    "code":0,
-			    "message":"ok",
-			    "data":
-			    {
-			           "action":"weather.weather_forecast",
-			           "executable": 1,
-			           "nlg":
-			               {
-			                   "text":"{地点}{时间}[天气情况数据]，气温[XX度到XX度]，[温馨提示2]or[温馨提示1]，（空气[质量]，[温馨提示3]，）[天气预警]",
-			                   "type":1
-			               },
-			           "slot":
-			            {
-			                "date":"明天",
-			                "location":"北京",
-			                "type":"weather"
-			            }
-			    }
-			   }`
-		case 1:
-			result=`{
-			    "code":1,
-			    "message":"error",
-			    "data":
-			    {
-			           "action":"weather.weather_forecast",
-			           "executable": 1,
-			           "nlg":
-			               {
-			                   "text":"{地点}{时间}[天气情况数据]，气温[XX度到XX度]，[温馨提示2]or[温馨提示1]，（空气[质量]，[温馨提示3]，）[天气预警]",
-			                   "type":1
-			               },
-			           "slot":
-			            {
-			                "date":"明天",
-			                "location":"北京",
-			                "type":"weather"
-			            }
-			    }
-			   }`
-		case 2:
-			result=`{
-			    "code":0,
-			    "message":"terter",
-			    "data":
-			    {
-			           "action":"weather.weather_forecast",
-			           "executable": 1,
-			           "slot":
-			            {
-			                "date":"",
-			                "location":"",
-			                "type":"weather"
-			            }
-			    }
-			   }`
-		case 3:
-			result=`{
-			    "code":0,
-			    "message":"sssss",
-			    "data":
-			    {
-			           "action":"weather.weather_forecast",
-			           "executable": 1,
-			           "slot":
-			            {
-			                "date":"",
-			                "location":"北京",
-			                "type":"weather"
-			            }
-			    }
-			   }`
-	default:
-		result=`{
-			    "code":404,
-			    "message":"ok",
-			    "data":
-			    {
-			           "action":"weather.weather_forecast",
-			           "executable": 1,
-			           "nlg":
-			               {
-			                   "text":"{地点}{时间}[天气情况数据]，气温[XX度到XX度]，[温馨提示2]or[温馨提示1]，（空气[质量]，[温馨提示3]，）[天气预警]",
-			                   "type":1
-			               },
-			           "slot":
-			            {
-			                "date":"明天",
-			                "location":"北京",
-			                "type":"weather"
-			            }
-			    }
-			   }`
+	param:=this.Ctx.Request.Form.Get("param")
+	m:=make(map[string]interface{})
+	json.Unmarshal([]byte(param),&m)
+	msg:=m["fileMsg"].([]interface{})
+	fmt.Println(msg)
+	res_type:=m["type"].(string)
+	lat:=strconv.FormatFloat(m["lat"].(float64), 'E', -1, 64)//float64
+	lng:=strconv.FormatFloat(m["lng"].(float64), 'E', -1, 64)//float64
+	position:=m["position"].(string)
+	user:=m["user"].(string)
+	category:=m["category"].(string)
+	for index,item:=range msg{
+		tmp:=item.(map[string]interface{})["data"].(map[string]interface{})
+		fmt.Println(index,tmp["FileName"])
+		sql:="insert into resource (name,path,type,createTime,sub_user,lat,lng,thumb,position,category)" +
+			"values('"+tmp["FileName"].(string)+"','"+tmp["FilePath"].(string)+"','"+res_type+"'," +
+				"'"+models.GetCurrentTime()+"','"+user+"','"+lat+"','"+lng+"','"+tmp["ThumbPath"].(string)+"','"+position+"','"+category+"')"
+		fmt.Println(sql)
+		s:=dbUtils.Add(sql)
+		fmt.Println("result:%s",s)
 	}
-	this.Ctx.WriteString(result)
+	this.Ctx.WriteString("OK")
 }

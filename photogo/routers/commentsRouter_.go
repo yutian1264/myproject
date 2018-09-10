@@ -7,6 +7,22 @@ import (
 
 func init() {
 
+	beego.GlobalControllerRouter["photogo/controllers:DirectoryManager"] = append(beego.GlobalControllerRouter["photogo/controllers:DirectoryManager"],
+		beego.ControllerComments{
+			Method: "AddDirectory",
+			Router: `/addDirectory`,
+			AllowHTTPMethods: []string{"post"},
+			MethodParams: param.Make(),
+			Params: nil})
+
+	beego.GlobalControllerRouter["photogo/controllers:DirectoryManager"] = append(beego.GlobalControllerRouter["photogo/controllers:DirectoryManager"],
+		beego.ControllerComments{
+			Method: "GetDirectoryListByUser",
+			Router: `/getDirectoryListByUser`,
+			AllowHTTPMethods: []string{"get"},
+			MethodParams: param.Make(),
+			Params: nil})
+
 	beego.GlobalControllerRouter["photogo/controllers:MainController"] = append(beego.GlobalControllerRouter["photogo/controllers:MainController"],
 		beego.ControllerComments{
 			Method: "UpdateRess",
@@ -20,6 +36,14 @@ func init() {
 			Method: "AddLocalImgs",
 			Router: `/addLocalImgs`,
 			AllowHTTPMethods: []string{"get"},
+			MethodParams: param.Make(),
+			Params: nil})
+
+	beego.GlobalControllerRouter["photogo/controllers:MainController"] = append(beego.GlobalControllerRouter["photogo/controllers:MainController"],
+		beego.ControllerComments{
+			Method: "AddResource",
+			Router: `/addResource`,
+			AllowHTTPMethods: []string{"post"},
 			MethodParams: param.Make(),
 			Params: nil})
 
@@ -60,14 +84,6 @@ func init() {
 			Method: "GetResTypeList",
 			Router: `/getResTypeList`,
 			AllowHTTPMethods: []string{"get"},
-			MethodParams: param.Make(),
-			Params: nil})
-
-	beego.GlobalControllerRouter["photogo/controllers:MainController"] = append(beego.GlobalControllerRouter["photogo/controllers:MainController"],
-		beego.ControllerComments{
-			Method: "Tpost",
-			Router: `/testpost`,
-			AllowHTTPMethods: []string{"post"},
 			MethodParams: param.Make(),
 			Params: nil})
 

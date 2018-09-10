@@ -40,21 +40,21 @@
       }
     }
 
-    function test() {
-      $.ajax({
-        url:"http://192.168.110.143:8080/bzy/user/logins.do",
-        type:"post",
-        data:JSON.stringify({name:"wyt",pwd:"123",loginType:0}),
-        dataType : "json",
-        contentType : "application/json; charset=utf-8",
-        success:function(d){
-         console.log(d)
-        },
-        error:function(e){
-          console.log("获取远程数据异常")
-        }
-      })
-    }
+    // function test() {
+    //   $.ajax({
+    //     url:"http://192.168.110.143:8080/bzy/user/logins.do",
+    //     type:"post",
+    //     data:JSON.stringify({name:"wyt",pwd:"123",loginType:0}),
+    //     dataType : "json",
+    //     contentType : "application/json; charset=utf-8",
+    //     success:function(d){
+    //      console.log(d)
+    //     },
+    //     error:function(e){
+    //       console.log("获取远程数据异常")
+    //     }
+    //   })
+    // }
 
 </script>
 
